@@ -35,6 +35,12 @@
         .ui-field-contain {
             margin-bottom: 15px;
         }
+        .checklist-item {
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +73,7 @@
         <ul data-role="listview">
             <li><a href="#safety-checklist" class="ui-btn">Pre-Startup Safety Review Checklist</a></li>
             <li><a href="#truck-inspection" class="ui-btn">Truck Inspection Checklist</a></li>
+            <li><a href="#saved-checklists" class="ui-btn">View Saved Checklists</a></li>
             <li><a href="#login" class="ui-btn">Logout</a></li>
         </ul>
     </div>
@@ -101,8 +108,9 @@
                 <label for="comments">Comments:</label>
                 <textarea name="comments" id="comments"></textarea>
             </div>
-            <input type="submit" value="Submit" class="ui-btn">
+            <input type="submit" value="Save Checklist" class="ui-btn">
         </form>
+        <div id="checklist-preview"></div>
     </div>
 </div>
 
@@ -135,8 +143,21 @@
                 <label for="notes">Notes:</label>
                 <textarea name="notes" id="notes"></textarea>
             </div>
-            <input type="submit" value="Submit" class="ui-btn">
+            <input type="submit" value="Save Checklist" class="ui-btn">
         </form>
+        <div id="inspection-preview"></div>
+    </div>
+</div>
+
+<div data-role="page" id="saved-checklists">
+    <div data-role="header">
+        <h1>Saved Checklists</h1>
+    </div>
+    <div data-role="content">
+        <h2>Pre-Startup Safety Checklists</h2>
+        <div id="safety-checklist-list"></div>
+        <h2>Truck Inspections</h2>
+        <div id="inspection-checklist-list"></div>
     </div>
 </div>
 
@@ -155,50 +176,65 @@
             }
         });
 
-        // Load existing values from localStorage
-        function loadValues(formId) {
-            $(formId + " input, " + formId + " textarea, " + formId + " select").each(function() {
-                const id = $(this).attr("id");
-                if (localStorage.getItem(id)) {
-                    $(this).val(localStorage.getItem(id));
-                }
-            });
-        }
-
-        // Save values to localStorage
-        function saveValues(formId) {
-            $(formId + " input, " + formId + " textarea, " + formId + " select").each(function() {
-                const id = $(this).attr("id");
-                localStorage.setItem(id, $(this).val());
-            });
-        }
-
-        // Safety form submit handler
+        // Save Pre-Startup Safety Checklist
         $("#safety-form").on("submit", function(event) {
             event.preventDefault();
-            saveValues("#safety-form");
-            alert("Safety Checklist submitted successfully!");
+            var checklist = {
+                date: $("#review-date").val(),
+                reviewer: $("#reviewer-name").val(),
+                item: $("#safety-item").val(),
+                status: $("#safety-status").val(),
+                comments: $("#comments").val()
+            };
+            saveChecklist("safety", checklist);
+            alert("Safety Checklist saved successfully!");
             $(this)[0].reset();
-            $.mobile.changePage("#menu");
+            loadChecklists();
         });
 
-        // Inspection form submit handler
+        // Save Truck Inspection Checklist
         $("#inspection-form").on("submit", function(event) {
             event.preventDefault();
-            saveValues("#inspection-form");
-            alert("Truck Inspection submitted successfully!");
+            var checklist = {
+                date: $("#inspection-date").val(),
+                inspector: $("#inspector-name").val(),
+                item: $("#inspection-item").val(),
+                status: $("#inspection-status").val(),
+                notes: $("#notes").val()
+            };
+            saveChecklist("inspection", checklist);
+            alert("Truck Inspection saved successfully!");
             $(this)[0].reset();
-            $.mobile.changePage("#menu");
+            loadChecklists();
         });
 
-        // Load values when the safety checklist page is shown
-        $("#safety-checklist").on("pageshow", function() {
-            loadValues("#safety-form");
-        });
+        // Save checklist to localStorage
+        function saveChecklist(type, checklist) {
+            var checklists = JSON.parse(localStorage.getItem(type + "Checklists")) || [];
+            checklists.push(checklist);
+            localStorage.setItem(type + "Checklists", JSON.stringify(checklists));
+        }
 
-        // Load values when the truck inspection page is shown
-        $("#truck-inspection").on("pageshow", function() {
-            loadValues("#inspection-form");
+        // Load saved checklists into the display area
+        function loadChecklists() {
+            $("#safety-checklist-list").empty();
+            $("#inspection-checklist-list").empty();
+
+            var safetyChecklists = JSON.parse(localStorage.getItem("safetyChecklists")) || [];
+            var inspectionChecklists = JSON.parse(localStorage.getItem("inspectionChecklists")) || [];
+
+            safetyChecklists.forEach(function(checklist, index) {
+                $("#safety-checklist-list").append("<div class='checklist-item'><strong>Date:</strong> " + checklist.date + "<br><strong>Reviewer:</strong> " + checklist.reviewer + "<br><strong>Item:</strong> " + checklist.item + "<br><strong>Status:</strong> " + checklist.status + "<br><strong>Comments:</strong> " + checklist.comments + "</div>");
+            });
+
+            inspectionChecklists.forEach(function(checklist, index) {
+                $("#inspection-checklist-list").append("<div class='checklist-item'><strong>Date:</strong> " + checklist.date + "<br><strong>Inspector:</strong> " + checklist.inspector + "<br><strong>Item:</strong> " + checklist.item + "<br><strong>Status:</strong> " + checklist.status + "<br><strong>Notes:</strong> " + checklist.notes + "</div>");
+            });
+        }
+
+        // Load checklists when the saved checklists page is shown
+        $("#saved-checklists").on("pageshow", function() {
+            loadChecklists();
         });
     });
 </script>
