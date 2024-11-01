@@ -3,74 +3,113 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>jQuery Mobile Example</title>
+    <title>Checklist App</title>
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
-<!-- Login Page -->
 <div data-role="page" id="login">
     <div data-role="header">
         <h1>Login</h1>
     </div>
-    <div role="main" class="ui-content">
-        <form id="loginForm">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+    <div data-role="content">
+        <form id="login-form">
+            <div class="ui-field-contain">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+            <div class="ui-field-contain">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
             <input type="submit" value="Login">
         </form>
+        <div id="login-error" class="hidden">Invalid credentials. Please try again.</div>
     </div>
 </div>
 
-<!-- Home Page -->
-<div data-role="page" id="home">
+<div data-role="page" id="menu">
     <div data-role="header">
-        <h1>Home</h1>
-        <a href="#login" class="ui-btn-right">Logout</a>
+        <h1>Menu</h1>
     </div>
-    <div role="main" class="ui-content">
-        <h2>Welcome!</h2>
-        <p>This is the home page after login.</p>
+    <div data-role="content">
         <ul data-role="listview">
-            <li><a href="#page1">Page 1</a></li>
-            <li><a href="#page2">Page 2</a></li>
+            <li><a href="#safety-checklist">Pre-Startup Safety Review Checklist</a></li>
+            <li><a href="#truck-inspection">Truck Inspection Checklist</a></li>
+            <li><a href="#login">Logout</a></li>
         </ul>
     </div>
 </div>
 
-<!-- Page 1 -->
-<div data-role="page" id="page1">
+<div data-role="page" id="safety-checklist">
     <div data-role="header">
-        <h1>Page 1</h1>
-        <a href="#home" class="ui-btn-right">Back</a>
+        <h1>Safety Checklist</h1>
     </div>
-    <div role="main" class="ui-content">
-        <h2>Content for Page 1</h2>
-        <p>This is some content for the first page.</p>
+    <div data-role="content">
+        <form id="safety-form">
+            <div class="ui-field-contain">
+                <label for="safety-item">Safety Item:</label>
+                <input type="text" name="safety-item" id="safety-item" required>
+            </div>
+            <div class="ui-field-contain">
+                <label for="safety-status">Status:</label>
+                <select name="safety-status" id="safety-status">
+                    <option value="pass">Pass</option>
+                    <option value="fail">Fail</option>
+                </select>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
     </div>
 </div>
 
-<!-- Page 2 -->
-<div data-role="page" id="page2">
+<div data-role="page" id="truck-inspection">
     <div data-role="header">
-        <h1>Page 2</h1>
-        <a href="#home" class="ui-btn-right">Back</a>
+        <h1>Truck Inspection</h1>
     </div>
-    <div role="main" class="ui-content">
-        <h2>Content for Page 2</h2>
-        <p>This is some content for the second page.</p>
+    <div data-role="content">
+        <form id="inspection-form">
+            <div class="ui-field-contain">
+                <label for="inspection-item">Inspection Item:</label>
+                <input type="text" name="inspection-item" id="inspection-item" required>
+            </div>
+            <div class="ui-field-contain">
+                <label for="inspection-status">Status:</label>
+                <select name="inspection-status" id="inspection-status">
+                    <option value="pass">Pass</option>
+                    <option value="fail">Fail</option>
+                </select>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
     </div>
 </div>
 
 <script>
-    $(document).on('submit', '#loginForm', function(event) {
-        event.preventDefault();
-        // Here you can add your authentication logic
-        $.mobile.changePage('#home');
+    $(document).ready(function() {
+        $("#login-form").on("submit", function(event) {
+            event.preventDefault();
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            if (username === "demo" && password === "demo") {
+                $.mobile.changePage("#menu");
+            } else {
+                $("#login-error").removeClass("hidden");
+            }
+        });
+
+        $("#safety-form, #inspection-form").on("submit", function(event) {
+            event.preventDefault();
+            alert("Form submitted successfully!");
+            $(this)[0].reset();
+            $.mobile.changePage("#menu");
+        });
     });
 </script>
 
