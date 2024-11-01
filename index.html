@@ -6,7 +6,7 @@
     <title>Checklist App</title>
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <style>
         body {
             background-color: #f9f9f9;
@@ -85,6 +85,7 @@
     </div>
     <div data-role="content">
         <form id="safety-form">
+            <input type="hidden" id="safety-index">
             <div class="ui-field-contain">
                 <label for="review-date">Review Date:</label>
                 <input type="date" name="review-date" id="review-date" required>
@@ -120,6 +121,7 @@
     </div>
     <div data-role="content">
         <form id="inspection-form">
+            <input type="hidden" id="inspection-index">
             <div class="ui-field-contain">
                 <label for="inspection-date">Inspection Date:</label>
                 <input type="date" name="inspection-date" id="inspection-date" required>
@@ -179,6 +181,7 @@
         // Save Pre-Startup Safety Checklist
         $("#safety-form").on("submit", function(event) {
             event.preventDefault();
+            var index = $("#safety-index").val();
             var checklist = {
                 date: $("#review-date").val(),
                 reviewer: $("#reviewer-name").val(),
@@ -186,15 +189,23 @@
                 status: $("#safety-status").val(),
                 comments: $("#comments").val()
             };
-            saveChecklist("safety", checklist);
-            alert("Safety Checklist saved successfully!");
+
+            if (index) {
+                updateChecklist("safety", index, checklist);
+                alert("Safety Checklist updated successfully!");
+            } else {
+                saveChecklist("safety", checklist);
+                alert("Safety Checklist saved successfully!");
+            }
+
             $(this)[0].reset();
-            $.mobile.changePage("#menu");  // Redirect to menu after saving
+            $.mobile.changePage("#menu");
         });
 
         // Save Truck Inspection Checklist
         $("#inspection-form").on("submit", function(event) {
             event.preventDefault();
+            var index = $("#inspection-index").val();
             var checklist = {
                 date: $("#inspection-date").val(),
                 inspector: $("#inspector-name").val(),
@@ -202,16 +213,30 @@
                 status: $("#inspection-status").val(),
                 notes: $("#notes").val()
             };
-            saveChecklist("inspection", checklist);
-            alert("Truck Inspection saved successfully!");
+
+            if (index) {
+                updateChecklist("inspection", index, checklist);
+                alert("Truck Inspection updated successfully!");
+            } else {
+                saveChecklist("inspection", checklist);
+                alert("Truck Inspection saved successfully!");
+            }
+
             $(this)[0].reset();
-            $.mobile.changePage("#menu");  // Redirect to menu after saving
+            $.mobile.changePage("#menu");
         });
 
         // Save checklist to localStorage
         function saveChecklist(type, checklist) {
             var checklists = JSON.parse(localStorage.getItem(type + "Checklists")) || [];
             checklists.push(checklist);
+            localStorage.setItem(type + "Checklists", JSON.stringify(checklists));
+        }
+
+        // Update checklist in localStorage
+        function updateChecklist(type, index, checklist) {
+            var checklists = JSON.parse(localStorage.getItem(type + "Checklists")) || [];
+            checklists[index] = checklist;
             localStorage.setItem(type + "Checklists", JSON.stringify(checklists));
         }
 
@@ -224,11 +249,52 @@
             var inspectionChecklists = JSON.parse(localStorage.getItem("inspectionChecklists")) || [];
 
             safetyChecklists.forEach(function(checklist, index) {
-                $("#safety-checklist-list").append("<div class='checklist-item'><strong>Date:</strong> " + checklist.date + "<br><strong>Reviewer:</strong> " + checklist.reviewer + "<br><strong>Item:</strong> " + checklist.item + "<br><strong>Status:</strong> " + checklist.status + "<br><strong>Comments:</strong> " + checklist.comments + "</div>");
+                $("#safety-checklist-list").append(
+                    "<div class='checklist-item'>" +
+                    "<strong>Date:</strong> " + checklist.date +
+                    "<br><strong>Reviewer:</strong> " + checklist.reviewer +
+                    "<br><strong>Item:</strong> " + checklist.item +
+                    "<br><strong>Status:</strong> " + checklist.status +
+                    "<br><strong>Comments:</strong> " + checklist.comments +
+                    "<br><a href='#safety-checklist' class='edit-safety' data-index='" + index + "'>Edit</a>" +
+                    "</div>"
+                );
             });
 
             inspectionChecklists.forEach(function(checklist, index) {
-                $("#inspection-checklist-list").append("<div class='checklist-item'><strong>Date:</strong> " + checklist.date + "<br><strong>Inspector:</strong> " + checklist.inspector + "<br><strong>Item:</strong> " + checklist.item + "<br><strong>Status:</strong> " + checklist.status + "<br><strong>Notes:</strong> " + checklist.notes + "</div>");
+                $("#inspection-checklist-list").append(
+                    "<div class='checklist-item'>" +
+                    "<strong>Date:</strong> " + checklist.date +
+                    "<br><strong>Inspector:</strong> " + checklist.inspector +
+                    "<br><strong>Item:</strong> " + checklist.item +
+                    "<br><strong>Status:</strong> " + checklist.status +
+                    "<br><strong>Notes:</strong> " + checklist.notes +
+                    "<br><a href='#truck-inspection' class='edit-inspection' data-index='" + index + "'>Edit</a>" +
+                    "</div>"
+                );
+            });
+
+            // Attach click event for edit links
+            $(".edit-safety").on("click", function() {
+                var index = $(this).data("index");
+                var checklist = safetyChecklists[index];
+                $("#safety-index").val(index);
+                $("#review-date").val(checklist.date);
+                $("#reviewer-name").val(checklist.reviewer);
+                $("#safety-item").val(checklist.item);
+                $("#safety-status").val(checklist.status);
+                $("#comments").val(checklist.comments);
+            });
+
+            $(".edit-inspection").on("click", function() {
+                var index = $(this).data("index");
+                var checklist = inspectionChecklists[index];
+                $("#inspection-index").val(index);
+                $("#inspection-date").val(checklist.date);
+                $("#inspector-name").val(checklist.inspector);
+                $("#inspection-item").val(checklist.item);
+                $("#inspection-status").val(checklist.status);
+                $("#notes").val(checklist.notes);
             });
         }
 
