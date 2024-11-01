@@ -47,11 +47,11 @@
         <form id="login-form">
             <div class="ui-field-contain">
                 <label for="username">Username:</label>
-                <input type="text" name="username" id="username" required placeholder="demo">
+                <input type="text" name="username" id="username" required>
             </div>
             <div class="ui-field-contain">
                 <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required placeholder="demo">
+                <input type="password" name="password" id="password" required>
             </div>
             <input type="submit" value="Login" class="ui-btn">
         </form>
@@ -142,6 +142,7 @@
 
 <script>
     $(document).ready(function() {
+        // Login functionality
         $("#login-form").on("submit", function(event) {
             event.preventDefault();
             var username = $("#username").val();
@@ -154,11 +155,50 @@
             }
         });
 
-        $("#safety-form, #inspection-form").on("submit", function(event) {
+        // Load existing values from localStorage
+        function loadValues(formId) {
+            $(formId + " input, " + formId + " textarea, " + formId + " select").each(function() {
+                const id = $(this).attr("id");
+                if (localStorage.getItem(id)) {
+                    $(this).val(localStorage.getItem(id));
+                }
+            });
+        }
+
+        // Save values to localStorage
+        function saveValues(formId) {
+            $(formId + " input, " + formId + " textarea, " + formId + " select").each(function() {
+                const id = $(this).attr("id");
+                localStorage.setItem(id, $(this).val());
+            });
+        }
+
+        // Safety form submit handler
+        $("#safety-form").on("submit", function(event) {
             event.preventDefault();
-            alert("Form submitted successfully!");
+            saveValues("#safety-form");
+            alert("Safety Checklist submitted successfully!");
             $(this)[0].reset();
             $.mobile.changePage("#menu");
+        });
+
+        // Inspection form submit handler
+        $("#inspection-form").on("submit", function(event) {
+            event.preventDefault();
+            saveValues("#inspection-form");
+            alert("Truck Inspection submitted successfully!");
+            $(this)[0].reset();
+            $.mobile.changePage("#menu");
+        });
+
+        // Load values when the safety checklist page is shown
+        $("#safety-checklist").on("pageshow", function() {
+            loadValues("#safety-form");
+        });
+
+        // Load values when the truck inspection page is shown
+        $("#truck-inspection").on("pageshow", function() {
+            loadValues("#inspection-form");
         });
     });
 </script>
