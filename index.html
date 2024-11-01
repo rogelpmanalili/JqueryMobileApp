@@ -79,6 +79,14 @@
     <div data-role="content">
         <form id="safety-form">
             <div class="ui-field-contain">
+                <label for="review-date">Review Date:</label>
+                <input type="date" name="review-date" id="review-date" required>
+            </div>
+            <div class="ui-field-contain">
+                <label for="reviewer-name">Reviewer Name:</label>
+                <input type="text" name="reviewer-name" id="reviewer-name" required>
+            </div>
+            <div class="ui-field-contain">
                 <label for="safety-item">Safety Item:</label>
                 <input type="text" name="safety-item" id="safety-item" required>
             </div>
@@ -88,6 +96,10 @@
                     <option value="pass">Pass</option>
                     <option value="fail">Fail</option>
                 </select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="comments">Comments:</label>
+                <textarea name="comments" id="comments"></textarea>
             </div>
             <input type="submit" value="Submit" class="ui-btn">
         </form>
@@ -101,6 +113,14 @@
     <div data-role="content">
         <form id="inspection-form">
             <div class="ui-field-contain">
+                <label for="inspection-date">Inspection Date:</label>
+                <input type="date" name="inspection-date" id="inspection-date" required>
+            </div>
+            <div class="ui-field-contain">
+                <label for="inspector-name">Inspector Name:</label>
+                <input type="text" name="inspector-name" id="inspector-name" required>
+            </div>
+            <div class="ui-field-contain">
                 <label for="inspection-item">Inspection Item:</label>
                 <input type="text" name="inspection-item" id="inspection-item" required>
             </div>
@@ -110,6 +130,10 @@
                     <option value="pass">Pass</option>
                     <option value="fail">Fail</option>
                 </select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="notes">Notes:</label>
+                <textarea name="notes" id="notes"></textarea>
             </div>
             <input type="submit" value="Submit" class="ui-btn">
         </form>
