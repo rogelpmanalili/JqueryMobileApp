@@ -8,7 +8,33 @@
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <style>
-        .hidden { display: none; }
+        body {
+            background-color: #f9f9f9;
+        }
+        .ui-page {
+            background-color: #ffffff;
+        }
+        .ui-header {
+            background: #007bff;
+            color: white;
+        }
+        .ui-content {
+            padding: 20px;
+        }
+        .ui-btn {
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+        }
+        .ui-btn:hover {
+            background-color: #218838;
+        }
+        .hidden {
+            display: none;
+        }
+        .ui-field-contain {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -27,7 +53,7 @@
                 <label for="password">Password:</label>
                 <input type="password" name="password" id="password" required>
             </div>
-            <input type="submit" value="Login">
+            <input type="submit" value="Login" class="ui-btn">
         </form>
         <div id="login-error" class="hidden">Invalid credentials. Please try again.</div>
     </div>
@@ -39,9 +65,9 @@
     </div>
     <div data-role="content">
         <ul data-role="listview">
-            <li><a href="#safety-checklist">Pre-Startup Safety Review Checklist</a></li>
-            <li><a href="#truck-inspection">Truck Inspection Checklist</a></li>
-            <li><a href="#login">Logout</a></li>
+            <li><a href="#safety-checklist" class="ui-btn">Pre-Startup Safety Review Checklist</a></li>
+            <li><a href="#truck-inspection" class="ui-btn">Truck Inspection Checklist</a></li>
+            <li><a href="#login" class="ui-btn">Logout</a></li>
         </ul>
     </div>
 </div>
@@ -63,7 +89,7 @@
                     <option value="fail">Fail</option>
                 </select>
             </div>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="ui-btn">
         </form>
     </div>
 </div>
@@ -85,7 +111,7 @@
                     <option value="fail">Fail</option>
                 </select>
             </div>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="ui-btn">
         </form>
     </div>
 </div>
