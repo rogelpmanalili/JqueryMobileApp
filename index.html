@@ -189,7 +189,7 @@
             saveChecklist("safety", checklist);
             alert("Safety Checklist saved successfully!");
             $(this)[0].reset();
-            loadChecklists();
+            $.mobile.changePage("#menu");  // Redirect to menu after saving
         });
 
         // Save Truck Inspection Checklist
@@ -205,7 +205,7 @@
             saveChecklist("inspection", checklist);
             alert("Truck Inspection saved successfully!");
             $(this)[0].reset();
-            loadChecklists();
+            $.mobile.changePage("#menu");  // Redirect to menu after saving
         });
 
         // Save checklist to localStorage
