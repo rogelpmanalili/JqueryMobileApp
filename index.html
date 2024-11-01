@@ -6,7 +6,7 @@
     <title>Checklist App</title>
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <style>
         body {
             background-color: #f9f9f9;
@@ -32,9 +32,6 @@
         .hidden {
             display: none;
         }
-        .ui-field-contain {
-            margin-bottom: 15px;
-        }
         .checklist-item {
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -45,6 +42,7 @@
 </head>
 <body>
 
+<!-- Login Page -->
 <div data-role="page" id="login">
     <div data-role="header">
         <h1>Login</h1>
@@ -65,6 +63,7 @@
     </div>
 </div>
 
+<!-- Menu Page -->
 <div data-role="page" id="menu">
     <div data-role="header">
         <h1>Menu</h1>
@@ -79,6 +78,7 @@
     </div>
 </div>
 
+<!-- Safety Checklist Page -->
 <div data-role="page" id="safety-checklist">
     <div data-role="header">
         <h1>Safety Checklist</h1>
@@ -111,10 +111,10 @@
             </div>
             <input type="submit" value="Save Checklist" class="ui-btn">
         </form>
-        <div id="checklist-preview"></div>
     </div>
 </div>
 
+<!-- Truck Inspection Page -->
 <div data-role="page" id="truck-inspection">
     <div data-role="header">
         <h1>Truck Inspection</h1>
@@ -147,10 +147,10 @@
             </div>
             <input type="submit" value="Save Checklist" class="ui-btn">
         </form>
-        <div id="inspection-preview"></div>
     </div>
 </div>
 
+<!-- Saved Checklists Page -->
 <div data-role="page" id="saved-checklists">
     <div data-role="header">
         <h1>Saved Checklists</h1>
@@ -170,7 +170,6 @@
             event.preventDefault();
             var username = $("#username").val();
             var password = $("#password").val();
-
             if (username === "demo" && password === "demo") {
                 $.mobile.changePage("#menu");
             } else {
